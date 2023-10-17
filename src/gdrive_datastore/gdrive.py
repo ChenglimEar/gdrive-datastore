@@ -15,11 +15,11 @@ def test_data_pull(default_folder='', default_subfolder='_LOCAL_'):
     os.makedirs(downloads_dir, exist_ok=True)
     copier = GDriveCopier(GDRIVE_FOLDER, target_subfolder = REPO_BRANCH)
     copier.download_to(downloads_dir)
-    print(f'Contents of downloads dir ({downloads_dir}):')
+    logging.info(f'Contents of downloads dir ({downloads_dir}):')
     local_files = os.listdir(downloads_dir)
     for local_file in local_files:
-        print(local_file)
-    print('Done')
+        logging.info(local_file)
+    logging.info('Done')
 
 
 class GDriveCopier:
@@ -64,7 +64,7 @@ and a folder on Google Drive.
         # Upload local files to folder on Google Drive
         local_files = os.listdir(local_folder)
         for local_file in local_files:
-            print(f'Uploading {local_file}')
+            logging.info(f'Uploading {local_file}')
             file_meta_data = {
                 'parents': [{'id': self.folder_id}],
                 'title':local_file
@@ -82,7 +82,7 @@ and a folder on Google Drive.
         #Get list of files in folder on Google Drive
         drive_files_dict = self.get_drive_files(self.folder_id)
         for file_name in drive_files_dict.keys():
-            print(f'Downloading {file_name}')
+            logging.info(f'Downloading {file_name}')
             drive_file = drive_files_dict[file_name]
             drive_file.GetContentFile(f'{local_folder}/{file_name}')
 
@@ -132,7 +132,7 @@ and a folder on Google Drive.
         folder_id = None
         for file in file_list: 
             if (file['title'] == self.target_folder) and (file['mimeType'] == 'application/vnd.google-apps.folder'):
-                print(f"title: {file['title']}, id: {file['id']}")
+                logging.info(f"title: {file['title']}, id: {file['id']}")
                 folder_id = file['id']
         if folder_id is None:
             raise Exception(f'Missing folder {self.target_folder}.  Be sure to share the folder with the service account.')
