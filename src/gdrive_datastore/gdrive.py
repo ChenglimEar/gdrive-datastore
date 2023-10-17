@@ -4,13 +4,16 @@ from oauth2client.service_account import ServiceAccountCredentials
 from pydrive2.auth import GoogleAuth 
 from pydrive2.drive import GoogleDrive
 
+import logging
+logging.basicConfig(level=logging.INFO)
+
 def test_data_pull(default_folder='', default_subfolder='_LOCAL_'):
     REPO_BRANCH = os.getenv('REPO_BRANCH',default_subfolder)
     GDRIVE_FOLDER = os.getenv('GDRIVE_FOLDER',default_folder) or default_folder
 
     downloads_dir = '.local/downloads'
     os.makedirs(downloads_dir, exist_ok=True)
-    copier = GDriveCopier(GDRIVE_FOLDER, target_branch = REPO_BRANCH)
+    copier = GDriveCopier(GDRIVE_FOLDER, target_subfolder = REPO_BRANCH)
     copier.download_to(downloads_dir)
     print(f'Contents of downloads dir ({downloads_dir}):')
     local_files = os.listdir(downloads_dir)
@@ -34,19 +37,23 @@ and a folder on Google Drive.
            should be placed in an environment variable, SERVICE_ACCOUNT_KEY_JSON.  For
            GitHub Actions, we can simply get the value from a secret of the same name.
     '''
-    def __init__(self, target_folder, target_branch = ''):
-        # The target_branch value will force the target to be a sub-folder
-        # under target_folder that is named with the value in target_branch.
-        # This ensures that we upload to a different location when we run
-        # a workflow in a feature branch
+    def __init__(self, target_folder, target_subfolder = ''):
+        '''Initialize access to target location in Google Drive
+         
+        The target_subfolder value will force the target to be a sub-folder
+        under target_folder that is named with the value in target_sub-folder.
+        This ensures that we can upload to a different location when we run
+        a workflow in a feature branch
+        '''
+        # set target
         self.target_folder = target_folder
-        self.target_branch = target_branch
+        self.target_branch = target_subfolder
         # Establish connection with Google Drive
         gauth = GoogleAuth() 
         gauth.credentials = self.get_service_account_credentials()
         self.drive = GoogleDrive(gauth)
         # Locate folder on Google Drive
-        print(f'Checking for folder {self.target_folder}')
+        logging.info(f'Checking for folder {self.target_folder}')
         self.folder_id = self.get_folder_id()
     
     def upload_from(self, local_folder):

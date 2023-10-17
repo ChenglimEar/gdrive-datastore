@@ -22,6 +22,8 @@ To test locally, simply run:
 
 ## upload to test pypi
 
+Before uploading, make sure you have a `.pypirc` file in your home directory that contains an API token for the test pypi site.  If this did not exist, the dev container would have created a directory of that name in its place.  You will hve to remove the created directory before creating the file.
+
 To upload to test pypi, simply run:
 
 > python -m twine upload --repository testpypi dist/*
