@@ -10,10 +10,14 @@ authors = [
 description = "A package to facilitate storing data in Google Drive."
 readme = "README.md"
 requires-python = ">=3.7"
+dependencies = [
+  "oauth2client",
+  "pydrive2"
+]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
 ]
 
 [project.urls]
