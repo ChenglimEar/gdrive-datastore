@@ -52,7 +52,7 @@ and a folder on Google Drive.
                 # overwrite if file exists on Google Drive
                 file_meta_data['id'] = drive_files_dict[local_file]['id']
             drive_file = self.drive.CreateFile(file_meta_data)
-            drive_file.SetContentFile(f'{self.target_folder}/{local_file}')
+            drive_file.SetContentFile(f'{local_folder}/{local_file}')
             drive_file.Upload()
 
     def download_to(self, local_folder):
@@ -125,7 +125,7 @@ and a folder on Google Drive.
         if self.target_branch in branch_files:
             folder_id = branch_files[self.target_branch]['id']
         else:
-            drive_file = self.drive.CreateFile({'parents': [{'id': folder_id}], 'title':self.target_branch, 'mimeType':'application/vnd.google-apps.folder'})
+            drive_file = self.drive.CreateFile({'parents': [{'id': parent_folder_id}], 'title':self.target_branch, 'mimeType':'application/vnd.google-apps.folder'})
             drive_file.Upload()
             folder_id = drive_file['id']
         return folder_id
