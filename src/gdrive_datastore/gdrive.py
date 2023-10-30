@@ -7,6 +7,7 @@ from pydrive2.drive import GoogleDrive
 import logging
 logging.basicConfig(level=logging.INFO)
 
+# deprecate this after switching to pull_data
 def test_data_pull(default_folder='', default_subfolder='_LOCAL_'):
     REPO_BRANCH = os.getenv('REPO_BRANCH',default_subfolder)
     GDRIVE_FOLDER = os.getenv('GDRIVE_FOLDER',default_folder) or default_folder
@@ -21,6 +22,21 @@ def test_data_pull(default_folder='', default_subfolder='_LOCAL_'):
         logging.info(local_file)
     logging.info('Done')
 
+def pull_data(folder=None, subfolder=None, default_folder='', default_subfolder='_LOCAL_'):
+    if folder is None:
+        folder = os.getenv('GDRIVE_FOLDER',default_folder) or default_folder
+    if subfolder is None:
+        subfolder = os.getenv('REPO_BRANCH',default_subfolder)
+    
+    downloads_dir = '.local/downloads'
+    os.makedirs(downloads_dir, exist_ok=True)
+    copier = GDriveCopier(folder, target_subfolder = subfolder)
+    copier.download_to(downloads_dir)
+    logging.info(f'Contents of downloads dir ({downloads_dir}):')
+    local_files = os.listdir(downloads_dir)
+    for local_file in local_files:
+        logging.info(local_file)
+    logging.info('Done')
 
 class GDriveCopier:
     '''This copier class supports uploading and downloading files between a local folder
