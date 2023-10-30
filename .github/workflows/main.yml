@@ -14,18 +14,7 @@ jobs:
     - uses: actions/checkout@v3
     - run: "python -m pip install -r requirements.txt"
     - run: "python -m pip install ."
-    - shell: 'python'
-      run: |
-        import os
-        # TODO: create .pypirc
-        HOME = os.getenv('HOME','')
-        filepath = f'{HOME}/.pypirc'
-        print(filepath)
-        PYPIRC = os.getenv('PYPIRC','test')
-        with open(filepath,'w') as f:
-          f.write(PYPIRC)
-    - run: "ls -al ~"
-    - run: "cat /home/runner/.pypirc"
+    - run: 'echo "$PYPIRC" > ~/.pypirc'
     - run: "cat ~/.pypirc"
     - run: "python -m build"
     - run: "pytest tests"
