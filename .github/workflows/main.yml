@@ -22,6 +22,7 @@ jobs:
         filepath = f'{HOME}/.pypirc'
         print(filepath)
     - run: "python -m build"
+    - run: "pytest tests"
     - run: "python -m twine upload --repository testpypi dist/*"
 
 
