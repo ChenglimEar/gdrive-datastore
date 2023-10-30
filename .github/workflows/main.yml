@@ -24,6 +24,8 @@ jobs:
         PYPIRC = os.getenv('PYPIRC','test')
         with open(filepath,'w') as f:
           f.write(PYPIRC)
+    - run: "ls -al ~"
+    - run: "cat /home/runner/.pypirc"
     - run: "cat ~/.pypirc"
     - run: "python -m build"
     - run: "pytest tests"
